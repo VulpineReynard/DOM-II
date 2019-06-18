@@ -9,15 +9,25 @@ const navArray = document.querySelectorAll('.nav a');
 const botBtn = document.querySelectorAll('.btn')[1];
 const home = document.querySelectorAll('.nav a')[0];
 const input = document.createElement('input');
+const body = document.querySelector('body');
+const button = document.createElement('button');
 // console.log(middlePics);
 // console.log(nav);
 // console.log(navArray);
 console.log(botBtn);
 console.log(home);
+let randColors = function () {
+  let rand1 = Math.floor(Math.random() * 256);
+  let rand2 = Math.floor(Math.random() * 256);
+  let rand3 = Math.floor(Math.random() * 256);
+  let randomColor = "rgb(" + rand1 + "," + rand2 + "," + rand3 + ")";
+  this.style.background = randomColor;
+}
 
 //Dom Changes
 navArray[3].textContent = "Click Me";
 header.style.zIndex = 1;
+//Input styles
 input.style.padding = '5px';
 input.style.border = '2px solid lightgrey';
 input.style.boxShadow = '0 2px 2px 2px grey';
@@ -26,11 +36,31 @@ input.style.background = '#EBE3EC';
 input.setAttribute('placeholder', 'Put your name in here!');
 input.setAttribute('name', 'subject');
 input.setAttribute('value', '');
+//Button styles
+button.style.padding = '10px';
+button.style.marginLeft = '40%';
+button.style.marginTop = '5px';
+button.style.opacity = 1;
+button.innerHTML = "Hold Down";
 
 // Event Listeners
 nav.addEventListener('click', event => {
   event.preventDefault();
-})
+});
+// Window listener
+window.addEventListener('load', event => {
+  navArray.forEach(element => {
+    element.style.padding = '5px';
+    element.style.border = '1px solid black';
+    element.style.boxShadow = '0 2px 2px 0';
+    element.style.borderRadius = '5px';
+  });
+});
+window.addEventListener('load', event => {
+  document.querySelector('.content-destination').appendChild(button);
+});
+// Change BackgroundColor when Scrolling
+body.addEventListener('wheel', randColors);
 // Bus Picture
 busPic.addEventListener('mouseover', event => {
   event.target.src = 'img/bus2.jpg';
@@ -104,7 +134,9 @@ navArray[3].addEventListener('click', event => {
     home.addEventListener('click', event => {
       document.querySelector('body').style.background = '#DDD0DF';
       document.querySelector('.intro').appendChild(input);
+      body.removeEventListener('wheel', randColors);
 
+      // Events for the new appended input
       input.addEventListener('focus', event => {
         input.style.background = '#AE81B5';
         input.style.color = 'white';
@@ -112,15 +144,54 @@ navArray[3].addEventListener('click', event => {
       input.addEventListener('blur', event => {
         input.style.background = '#EBE3EC';
       });
-      input.addEventListener('input', event => {
-        alert('Congratulations ' + input.value + ', you have won the scavenger hunt!');
-        console.log(input.value);
+      input.addEventListener('keypress', (e) => {
+        let key = e.which || e.keyCode;
+        if (key === 13){
+          alert('Congratulations ' + input.value + ', you have won the scavenger hunt!');
+          console.log(input.value);
+        }
       });
-      input.addEventListener('keyup', event => {
+      input.addEventListener('input', event => {
         console.log(input.value);
       });
     });
   });
+});
+
+buttonDown = function () {
+  if (button.style.opacity == 1){
+    let elem = document.querySelector('.content-destination img');
+    let opac = 1;
+    let id = setInterval(move, 50);
+    function move() {
+      if (opac <= 0){
+        clearInterval(id);
+      } else {
+        opac = opac - 0.02;
+        elem.style.opacity = opac;
+      }
+      console.log(opac);
+    }
+  }
+}
+button.addEventListener('mousedown', buttonDown);
+
+button.addEventListener('mouseup', event => {
+  button.removeEventListener('mousedown', buttonDown);
+  if(button.style.opacity < 1){
+    let elem = document.querySelector('.content-destination img');
+    let opac = 0;
+    let id = setInterval(move, 50);
+    function move() {
+      if (opac >= 1){
+        clearInterval(id);
+      } else {
+        opac = opac + 0.02;
+        elem.style.opacity = opac;
+      }
+      console.log(opac);
+    }
+  }
 });
 
 // busPic.addEventListener('mouseout', fadeIn);

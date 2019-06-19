@@ -14,9 +14,9 @@ const button = document.createElement('button');
 // console.log(middlePics);
 // console.log(nav);
 // console.log(navArray);
-console.log(botBtn);
-console.log(home);
-let randColors = function () {
+// console.log(botBtn);
+// console.log(home);
+let randBgColors = function () {
   let rand1 = Math.floor(Math.random() * 256);
   let rand2 = Math.floor(Math.random() * 256);
   let rand3 = Math.floor(Math.random() * 256);
@@ -60,7 +60,7 @@ window.addEventListener('load', event => {
   document.querySelector('.content-destination').appendChild(button);
 });
 // Change BackgroundColor when Scrolling
-body.addEventListener('wheel', randColors);
+body.addEventListener('wheel', randBgColors);
 // Bus Picture
 busPic.addEventListener('mouseover', event => {
   event.target.src = 'img/bus2.jpg';
@@ -121,6 +121,7 @@ title.addEventListener('click', event => {
     }
   }
 });
+//Scavenger hunt nested
 navArray[3].addEventListener('click', event => {
   alert("Check the console.");
   console.log("Check the bottom of the page");
@@ -134,15 +135,16 @@ navArray[3].addEventListener('click', event => {
     home.addEventListener('click', event => {
       document.querySelector('body').style.background = '#DDD0DF';
       document.querySelector('.intro').appendChild(input);
-      body.removeEventListener('wheel', randColors);
+      body.removeEventListener('wheel', randBgColors);
 
-      // Events for the new appended input
+      // Events for the newly appended input
       input.addEventListener('focus', event => {
         input.style.background = '#AE81B5';
         input.style.color = 'white';
       });
       input.addEventListener('blur', event => {
         input.style.background = '#EBE3EC';
+        input.style.color = 'black';
       });
       input.addEventListener('keypress', (e) => {
         let key = e.which || e.keyCode;
@@ -158,41 +160,43 @@ navArray[3].addEventListener('click', event => {
   });
 });
 
+//Button event listeners
 buttonDown = function () {
-  if (button.style.opacity == 1){
+  if (button.style.opacity >= 1){
     let elem = document.querySelector('.content-destination img');
     let opac = 1;
-    let id = setInterval(move, 50);
+    let id = setInterval(move, 30);
     function move() {
       if (opac <= 0){
         clearInterval(id);
+        opac = 0;
       } else {
-        opac = opac - 0.02;
+        opac = opac - 0.05;
         elem.style.opacity = opac;
       }
       console.log(opac);
     }
   }
 }
-button.addEventListener('mousedown', buttonDown);
-
-button.addEventListener('mouseup', event => {
+buttonUp = function() {
   button.removeEventListener('mousedown', buttonDown);
-  if(button.style.opacity < 1){
-    let elem = document.querySelector('.content-destination img');
-    let opac = 0;
-    let id = setInterval(move, 50);
+  if(button.style.opacity <= 1){
+    let opac = button.style.opacity;
+    let id = setInterval(move, 30);
     function move() {
       if (opac >= 1){
         clearInterval(id);
       } else {
-        opac = opac + 0.02;
-        elem.style.opacity = opac;
+        opac = opac + 0.05;
+        button.style.opacity = opac;
       }
       console.log(opac);
     }
   }
-});
+}
+
+button.addEventListener('mousedown', buttonDown);
+button.addEventListener('mouseup', buttonUp);
 
 // busPic.addEventListener('mouseout', fadeIn);
 
